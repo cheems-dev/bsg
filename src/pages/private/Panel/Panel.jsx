@@ -6,6 +6,7 @@ import ErrorField from "../../components/ErrorField";
 import PenIcon from "../../components/icons/Pencil";
 import Layout from "../components/Layout";
 import {
+  deleteByIdCollaborator,
   postByIdCollaborator,
   updateByIdCollaborator,
 } from "../../../services/bsg.service";
@@ -63,11 +64,11 @@ const Panel = () => {
         selectedRowIndex._id,
         payload
       );
-      setIsLoading(false);
 
       if (response) {
         handleClose();
       }
+      setIsLoading(false);
     } else {
       const payload = {
         nombre: data.name,
@@ -79,12 +80,21 @@ const Panel = () => {
 
       setIsLoading(true);
       const response = await postByIdCollaborator(payload);
-      setIsLoading(false);
 
       if (response) {
         handleClose();
       }
+      setIsLoading(false);
     }
+  };
+
+  const handleDelete = async () => {
+    setIsLoading(true);
+    const response = await deleteByIdCollaborator(selectedRowIndex._id);
+    if (response) {
+      handleClose();
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -213,14 +223,22 @@ const Panel = () => {
                       {switchValue ? "Activo" : "Inactivo"}
                     </label>
                   </div>
-
-                  <button
-                    type="submit"
-                    className="btn py-1 btn-dark float-end px-3 mt-4 rounded-3 bg-color-info"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? "Procesando" : "Enviar"}
-                  </button>
+                  <div className="d-flex justify-content-between">
+                    <button
+                      className="btn py-1 btn-dark text-white float-start back mt-4 px-4 rounded-3"
+                      disabled={isLoading}
+                      onClick={handleDelete}
+                    >
+                      {isLoading ? "Procesando" : "Eliminar"}
+                    </button>
+                    <button
+                      type="submit"
+                      className="btn py-1 btn-dark float-end px-3 mt-4 rounded-3 bg-color-info"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? "Procesando" : "Enviar"}
+                    </button>
+                  </div>
                 </div>
               </form>
             </>
